@@ -10,7 +10,8 @@
 #include <sqlite3.h>
 
 sqlite3 *db;
-sqlite3_stmt *insert_statement;
+sqlite3_stmt *mouse_positions_stmt;
+sqlite3_stmt *keystrokes_stmt;
 NSStatusItem * statusItem;
 
 @implementation TMAppDelegate
@@ -43,9 +44,27 @@ NSStatusItem * statusItem;
         exit(-1);
     }
     
-    err = sqlite3_prepare_v2(db, "INSERT INTO mousepositions (X, Y) VALUES (?, ?)", -1, &insert_statement, NULL);
+    err = sqlite3_prepare_v2(db, "INSERT INTO mousepositions (X, Y) VALUES (?, ?)", -1, &mouse_positions_stmt, NULL);
     if (err) {
-        NSLog(@"Can't create prepare insert statement: %s", sqlite3_errmsg(db));
+        NSLog(@"Can't prepare mousepositions insert statement: %s", sqlite3_errmsg(db));
+        sqlite3_close(db);
+        exit(-1);
+    }
+    
+    err = sqlite3_exec(db,
+                       "CREATE TABLE IF NOT EXISTS keystrokes ("
+                       "id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                       "time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,"
+                       "text TEXT)", NULL, NULL, NULL);
+    if (err) {
+        NSLog(@"Can't create table keystrokes: %s", sqlite3_errmsg(db));
+        sqlite3_close(db);
+        exit(-1);
+    }
+    
+    err = sqlite3_prepare_v2(db, "INSERT INTO keystrokes (text) VALUES (?)", -1, &keystrokes_stmt, NULL);
+    if (err) {
+        NSLog(@"Can't prepare keystrokes insert statement: %s", sqlite3_errmsg(db));
         sqlite3_close(db);
         exit(-1);
     }
@@ -54,6 +73,14 @@ NSStatusItem * statusItem;
     
     [NSTimer scheduledTimerWithTimeInterval: 2 target:self selector:@selector(logMouseLocation:) userInfo:NULL repeats:true];
     
+    NSDictionary *options = @{(__bridge id)kAXTrustedCheckOptionPrompt: @YES};
+    BOOL accessibilityEnabled = AXIsProcessTrustedWithOptions((__bridge CFDictionaryRef)options);
+    
+    if (accessibilityEnabled) {
+        [NSEvent addGlobalMonitorForEventsMatchingMask:NSKeyDownMask handler:^(NSEvent *event){
+            [self logKeys:event];
+        }];
+    }
 }
 
 -(void)awakeFromNib{
@@ -73,13 +100,28 @@ NSStatusItem * statusItem;
 {
     NSPoint loc =[NSEvent mouseLocation];
 
-    sqlite3_reset(insert_statement);
-    sqlite3_clear_bindings(insert_statement);
-    sqlite3_bind_int(insert_statement, 1, (int) loc.x);
-    sqlite3_bind_int(insert_statement, 2, (int) loc.y);
-    int err = sqlite3_step(insert_statement);
+    sqlite3_reset(mouse_positions_stmt);
+    sqlite3_clear_bindings(mouse_positions_stmt);
+    sqlite3_bind_int(mouse_positions_stmt, 1, (int) loc.x);
+    sqlite3_bind_int(mouse_positions_stmt, 2, (int) loc.y);
+    int err = sqlite3_step(mouse_positions_stmt);
     if (err != SQLITE_DONE && err != SQLITE_OK) {
         NSLog(@"Can't insert mouse position: %s", sqlite3_errmsg(db));
+    }
+}
+
+- (void)logKeys:(NSEvent *)event
+{
+    if (event.characters.length == 0) return;
+    NSLog(@"%@",event.characters);
+    const char *chars = [event.characters UTF8String];
+    int nChars = sizeof(chars);
+    sqlite3_reset(keystrokes_stmt);
+    sqlite3_clear_bindings(keystrokes_stmt);
+    sqlite3_bind_text(keystrokes_stmt, 1, chars, nChars, NULL);
+    int err = sqlite3_step(keystrokes_stmt);
+    if (err != SQLITE_DONE && err != SQLITE_OK) {
+        NSLog(@"Can't insert key stroke: %s", sqlite3_errmsg(db));
     }
 }
 
@@ -93,7 +135,6 @@ NSStatusItem * statusItem;
 
 - (void)getMouseLocation:(id)sender
 {
-    
     NSPoint loc =[NSEvent mouseLocation];
     NSLog(@"X: %f Y: %f", loc.x, loc.y );
 }
