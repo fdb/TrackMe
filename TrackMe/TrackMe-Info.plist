@@ -7,7 +7,7 @@
 	<key>CFBundleExecutable</key>
 	<string>${EXECUTABLE_NAME}</string>
 	<key>CFBundleIconFile</key>
-	<string></string>
+	<string>alien</string>
 	<key>CFBundleIdentifier</key>
 	<string>be.emrg.${PRODUCT_NAME:rfc1034identifier}</string>
 	<key>CFBundleInfoDictionaryVersion</key>
@@ -26,12 +26,12 @@
 	<string>public.app-category.productivity</string>
 	<key>LSMinimumSystemVersion</key>
 	<string>${MACOSX_DEPLOYMENT_TARGET}</string>
+	<key>LSUIElement</key>
+	<true/>
 	<key>NSHumanReadableCopyright</key>
 	<string>Copyright © 2013 EMRG. All rights reserved.</string>
 	<key>NSMainNibFile</key>
 	<string>MainMenu</string>
-	<key>LSUIElement</key>
-	<true/>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
 </dict>
