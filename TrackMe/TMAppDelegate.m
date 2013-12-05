@@ -96,7 +96,6 @@ NSStatusItem * statusItem;
     
     NSPoint loc =[NSEvent mouseLocation];
     NSLog(@"X: %f Y: %f", loc.x, loc.y );
-    
 }
 
 
@@ -126,6 +125,53 @@ NSStatusItem * statusItem;
 	}
     
 	CFRelease(loginItems);
+}
+
+- (IBAction)exportData:(id)sender
+{
+    NSArray* fileTypes = [[NSArray alloc] initWithObjects:@"csv", nil];
+    
+    NSSavePanel *panel = [NSSavePanel savePanel];
+    [panel setTitle:@"Export data to CSV"];
+    [panel setAllowedFileTypes:fileTypes];
+    NSInteger clicked = [panel runModal];
+    if (clicked == NSFileHandlingPanelOKButton) {
+        [self doExport:[panel URL]];
+    }
+}
+
+- (void)doExport:(NSURL *)path
+{
+    sqlite3_stmt *stmt;
+    NSMutableString *csv = [NSMutableString string];
+    [csv appendString:@"id,time,x,y"];
+    int err = sqlite3_prepare_v2(db, "SELECT id, time, x, y FROM mousepositions", -1, &stmt, NULL);
+    if (err) {
+        NSLog(@"Can't export mouse positions: %s", sqlite3_errmsg(db));
+    }
+    
+    int result = sqlite3_step(stmt);
+    while (result == SQLITE_ROW) {
+        int id = sqlite3_column_int(stmt, 0);
+        const unsigned char *text = sqlite3_column_text(stmt, 1);
+        NSString *timestamp = @"";
+        if (text) {
+            NSUInteger length = sqlite3_column_bytes(stmt, 1);
+            timestamp = [[NSString alloc] initWithBytes:text length:length encoding:NSUTF8StringEncoding];
+        }
+        int x = sqlite3_column_int(stmt, 2);
+        int y = sqlite3_column_int(stmt, 3);
+        [csv appendString:[NSString stringWithFormat:@"\n%i,%@,%i,%i", id, timestamp, x, y]];
+        result = sqlite3_step(stmt);
+    }
+    NSError *error;
+
+    BOOL ok = [csv writeToURL:path atomically:YES
+                        encoding:NSUTF8StringEncoding error:&error];
+    if (!ok) {
+        NSLog(@"Error writing file at %@\n%@",
+              path, [error localizedFailureReason]);
+    }
 }
 
 @end

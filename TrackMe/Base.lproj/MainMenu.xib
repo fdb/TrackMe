@@ -657,6 +657,14 @@
                 <menuItem title="TrackMe is running" enabled="NO" id="qhq-8Y-LSJ">
                     <modifierMask key="keyEquivalentModifierMask"/>
                 </menuItem>
+                <menuItem isSeparatorItem="YES" id="au8-ud-ukY"/>
+                <menuItem title="Export Data..." id="RjM-SN-F8F">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="exportData:" target="494" id="tt9-8Q-dj9"/>
+                    </connections>
+                </menuItem>
+                <menuItem isSeparatorItem="YES" id="6eq-MG-IaR"/>
                 <menuItem title="Quit" id="Sbg-W7-UgF">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
