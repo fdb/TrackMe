@@ -16,5 +16,7 @@
 - (IBAction)getWindowList:(id)sender;
 - (IBAction)getMouseLocation:(id)sender;
 - (void)logMouseLocation:(NSTimer *)timer;
+- (void) addAppAsLoginItem;
+- (void) deleteAppFromLoginItem;
 
 @end
