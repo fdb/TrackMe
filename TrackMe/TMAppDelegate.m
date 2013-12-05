@@ -11,6 +11,7 @@
 
 sqlite3 *db;
 sqlite3_stmt *insert_statement;
+NSStatusItem * statusItem;
 
 @implementation TMAppDelegate
 
@@ -52,9 +53,16 @@ sqlite3_stmt *insert_statement;
     [NSTimer scheduledTimerWithTimeInterval: 2 target:self selector:@selector(logMouseLocation:) userInfo:NULL repeats:true];
 }
 
+-(void)awakeFromNib{
+    statusItem = [[NSStatusBar systemStatusBar] statusItemWithLength:NSSquareStatusItemLength];
+    [statusItem setMenu:_statusMenu];
+
+    [statusItem setImage:[NSImage imageNamed:@"menu_icon"]];
+    [statusItem setHighlightMode:YES];
+}
+
 - (void)applicationWillTerminate:(NSNotification *)notification
 {
-    NSLog(@"Terminating");
     sqlite3_close(db);
 }
                                                                               

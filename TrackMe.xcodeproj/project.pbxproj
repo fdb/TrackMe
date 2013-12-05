@@ -20,6 +20,7 @@
 		619F70F9185099B4004F550B /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 619F70F7185099B4004F550B /* InfoPlist.strings */; };
 		619F70FB185099B4004F550B /* TrackMeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 619F70FA185099B4004F550B /* TrackMeTests.m */; };
 		619F71051850AEFB004F550B /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 619F71041850AEFB004F550B /* libsqlite3.dylib */; };
+		619F71071850C238004F550B /* menu_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 619F71061850C238004F550B /* menu_icon@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,6 +55,7 @@
 		619F70F8185099B4004F550B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		619F70FA185099B4004F550B /* TrackMeTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TrackMeTests.m; sourceTree = "<group>"; };
 		619F71041850AEFB004F550B /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
+		619F71061850C238004F550B /* menu_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menu_icon@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -121,6 +123,7 @@
 		619F70D3185099B4004F550B /* TrackMe */ = {
 			isa = PBXGroup;
 			children = (
+				619F71061850C238004F550B /* menu_icon@2x.png */,
 				619F70DF185099B4004F550B /* TMAppDelegate.h */,
 				619F70E0185099B4004F550B /* TMAppDelegate.m */,
 				619F70E2185099B4004F550B /* MainMenu.xib */,
@@ -241,6 +244,7 @@
 				619F70D8185099B4004F550B /* InfoPlist.strings in Resources */,
 				619F70E9185099B4004F550B /* Images.xcassets in Resources */,
 				619F70DE185099B4004F550B /* Credits.rtf in Resources */,
+				619F71071850C238004F550B /* menu_icon@2x.png in Resources */,
 				619F70E4185099B4004F550B /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -473,6 +477,7 @@
 				619F7100185099B4004F550B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		619F7101185099B4004F550B /* Build configuration list for PBXNativeTarget "TrackMeTests" */ = {
 			isa = XCConfigurationList;
@@ -481,6 +486,7 @@
 				619F7103185099B4004F550B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 

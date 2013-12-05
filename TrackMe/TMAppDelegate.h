@@ -11,6 +11,7 @@
 @interface TMAppDelegate : NSObject <NSApplicationDelegate>
 
 @property (assign) IBOutlet NSWindow *window;
+@property (assign) IBOutlet NSMenu *statusMenu;
 
 - (IBAction)getWindowList:(id)sender;
 - (IBAction)getMouseLocation:(id)sender;
