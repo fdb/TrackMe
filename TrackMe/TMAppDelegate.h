@@ -12,7 +12,11 @@
 
 @property (assign) IBOutlet NSWindow *window;
 @property (assign) IBOutlet NSMenu *statusMenu;
+@property (assign) IBOutlet NSMenuItem *logMouseMenu;
+@property (assign) IBOutlet NSMenuItem *logKeysMenu;
 
 - (IBAction)exportData:(id)sender;
+- (IBAction)toggleMouseLogging:(id)sender;
+- (IBAction)toggleKeyLogging:(id)sender;
 
 @end
