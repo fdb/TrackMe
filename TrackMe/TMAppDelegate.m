@@ -88,6 +88,15 @@ id mouseMonitor = NULL;
         if (logKeys) {
             [self startLoggingKeys];
         }
+        if (!logMouse && !logKeys) {
+            NSAlert *alert = [[NSAlert alloc] init];
+            [alert addButtonWithTitle:@"OK"];
+            [alert setMessageText:@"TrackMe isn't logging anything."];
+            [alert setInformativeText:@"Both mouse and key logging is turned off. Please enable one or both of them."];
+            [alert setAlertStyle:NSWarningAlertStyle];
+            [alert runModal];
+
+        }
     } else {
         NSAlert *alert = [[NSAlert alloc] init];
         [alert addButtonWithTitle:@"Quit"];
