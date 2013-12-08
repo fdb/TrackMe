@@ -35,7 +35,7 @@ NSStatusItem * statusItem;
     err = sqlite3_exec(db,
                        "CREATE TABLE IF NOT EXISTS mousepositions ("
                        "id INTEGER PRIMARY KEY AUTOINCREMENT,"
-                       "time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,"
+                       "time TIMESTAMP DATETIME DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW')),"
                        "x INTEGER,"
                        "y INTEGER)", NULL, NULL, NULL);
     if (err) {
@@ -54,7 +54,7 @@ NSStatusItem * statusItem;
     err = sqlite3_exec(db,
                        "CREATE TABLE IF NOT EXISTS keystrokes ("
                        "id INTEGER PRIMARY KEY AUTOINCREMENT,"
-                       "time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,"
+                       "time TIMESTAMP DATETIME DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW')),"
                        "text TEXT)", NULL, NULL, NULL);
     if (err) {
         NSLog(@"Can't create table keystrokes: %s", sqlite3_errmsg(db));
