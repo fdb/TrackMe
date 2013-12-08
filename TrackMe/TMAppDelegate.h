@@ -13,11 +13,6 @@
 @property (assign) IBOutlet NSWindow *window;
 @property (assign) IBOutlet NSMenu *statusMenu;
 
-- (IBAction)getWindowList:(id)sender;
-- (IBAction)getMouseLocation:(id)sender;
 - (IBAction)exportData:(id)sender;
-- (void)logMouseLocation:(NSTimer *)timer;
-- (void) addAppAsLoginItem;
-- (void)doExport:(NSURL *)path;
 
 @end

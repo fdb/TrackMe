@@ -71,19 +71,29 @@ NSStatusItem * statusItem;
     
     [self addAppAsLoginItem];
     
-    [NSTimer scheduledTimerWithTimeInterval: 2 target:self selector:@selector(logMouseLocation:) userInfo:NULL repeats:true];
-    
     NSDictionary *options = @{(__bridge id)kAXTrustedCheckOptionPrompt: @YES};
     BOOL accessibilityEnabled = AXIsProcessTrustedWithOptions((__bridge CFDictionaryRef)options);
     
     if (accessibilityEnabled) {
         [NSEvent addGlobalMonitorForEventsMatchingMask:NSKeyDownMask handler:^(NSEvent *event){
-            [self logKeys:event];
+            [self logKeyDown:event];
         }];
+        [NSEvent addGlobalMonitorForEventsMatchingMask:NSMouseMovedMask handler:^(NSEvent *event) {
+            [self logMouseMoved:event];
+        }];
+    } else {
+        NSAlert *alert = [[NSAlert alloc] init];
+        [alert addButtonWithTitle:@"Quit"];
+        [alert setMessageText:@"Enable access for assistive devices."];
+        [alert setInformativeText:@"TrackMe needs access for assistive devices. Please enable it in the System Preferences."];
+        [alert setAlertStyle:NSCriticalAlertStyle];
+        [alert runModal];
+        [NSApp terminate:self];
     }
 }
 
--(void)awakeFromNib{
+-(void)awakeFromNib
+{
     statusItem = [[NSStatusBar systemStatusBar] statusItemWithLength:NSSquareStatusItemLength];
     [statusItem setMenu:_statusMenu];
 
@@ -95,25 +105,26 @@ NSStatusItem * statusItem;
 {
     sqlite3_close(db);
 }
-                                                                              
-- (void)logMouseLocation:(NSTimer *)timer
-{
-    NSPoint loc =[NSEvent mouseLocation];
 
-    sqlite3_reset(mouse_positions_stmt);
-    sqlite3_clear_bindings(mouse_positions_stmt);
-    sqlite3_bind_int(mouse_positions_stmt, 1, (int) loc.x);
-    sqlite3_bind_int(mouse_positions_stmt, 2, (int) loc.y);
-    int err = sqlite3_step(mouse_positions_stmt);
-    if (err != SQLITE_DONE && err != SQLITE_OK) {
-        NSLog(@"Can't insert mouse position: %s", sqlite3_errmsg(db));
-    }
+- (void)addAppAsLoginItem
+{
+	NSString * appPath = [[NSBundle mainBundle] bundlePath];
+	CFURLRef url = (__bridge CFURLRef)[NSURL fileURLWithPath:appPath];
+	LSSharedFileListRef loginItems = LSSharedFileListCreate(NULL, kLSSharedFileListSessionLoginItems, NULL);
+	if (loginItems) {
+		LSSharedFileListItemRef item = LSSharedFileListInsertItemURL(loginItems,
+                                                                     kLSSharedFileListItemLast, NULL, NULL,
+                                                                     url, NULL, NULL);
+		if (item) {
+			CFRelease(item);
+        }
+	}
+	CFRelease(loginItems);
 }
 
-- (void)logKeys:(NSEvent *)event
+- (void)logKeyDown:(NSEvent *)event
 {
     if (event.characters.length == 0) return;
-    NSLog(@"%@",event.characters);
     const char *chars = [event.characters UTF8String];
     int nChars = sizeof(chars);
     sqlite3_reset(keystrokes_stmt);
@@ -125,47 +136,18 @@ NSStatusItem * statusItem;
     }
 }
 
-- (void)getWindowList:(id)sender
-{
-    CGWindowListOption listOptions = kCGWindowListOptionAll;
-    CFArrayRef windowList = CGWindowListCopyWindowInfo(listOptions, kCGNullWindowID);
-    NSLog(@"%@", windowList);
-
-}
-
-- (void)getMouseLocation:(id)sender
+- (void)logMouseMoved:(NSEvent *)event
 {
     NSPoint loc =[NSEvent mouseLocation];
-    NSLog(@"X: %f Y: %f", loc.x, loc.y );
-}
-
-
-- (void) addAppAsLoginItem
-{
-	NSString * appPath = [[NSBundle mainBundle] bundlePath];
     
-	// This will retrieve the path for the application
-	// For example, /Applications/test.app
-	CFURLRef url = (__bridge CFURLRef)[NSURL fileURLWithPath:appPath];
-    
-	// Create a reference to the shared file list.
-    // We are adding it to the current user only.
-    // If we want to add it all users, use
-    // kLSSharedFileListGlobalLoginItems instead of
-    //kLSSharedFileListSessionLoginItems
-	LSSharedFileListRef loginItems = LSSharedFileListCreate(NULL,
-                                                            kLSSharedFileListSessionLoginItems, NULL);
-	if (loginItems) {
-		//Insert an item to the list.
-		LSSharedFileListItemRef item = LSSharedFileListInsertItemURL(loginItems,
-                                                                     kLSSharedFileListItemLast, NULL, NULL,
-                                                                     url, NULL, NULL);
-		if (item){
-			CFRelease(item);
-        }
-	}
-    
-	CFRelease(loginItems);
+    sqlite3_reset(mouse_positions_stmt);
+    sqlite3_clear_bindings(mouse_positions_stmt);
+    sqlite3_bind_int(mouse_positions_stmt, 1, (int) loc.x);
+    sqlite3_bind_int(mouse_positions_stmt, 2, (int) loc.y);
+    int err = sqlite3_step(mouse_positions_stmt);
+    if (err != SQLITE_DONE && err != SQLITE_OK) {
+        NSLog(@"Can't insert mouse position: %s", sqlite3_errmsg(db));
+    }
 }
 
 - (IBAction)exportData:(id)sender
