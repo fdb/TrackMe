@@ -79,12 +79,10 @@ id mouseMonitor = NULL;
     [[self logKeysMenu] setState:logKeys ? NSOnState : NSOffState];
 
     BOOL accessibilityEnabled = NO;
-    if (AXIsProcessTrusted()) {
+    if (AXAPIEnabled()) {
         accessibilityEnabled = YES;
-    } else {
-        NSString* executablePath = [[NSBundle mainBundle] executablePath];
-        int error = AXMakeProcessTrusted((__bridge CFStringRef)executablePath);
-        accessibilityEnabled = error == kAXErrorSuccess;
+    } else if (AXIsProcessTrusted()) {
+        accessibilityEnabled = YES;
     }
     
     if (accessibilityEnabled) {
