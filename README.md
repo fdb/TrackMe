@@ -9,3 +9,7 @@ Features
 * Lightweight footprint.
 * Starts automatically on login.
 * Ability to export the data as CSV.
+
+Download
+--------
+[Download the latest release](https://github.com/fdb/TrackMe/releases/latest)
