@@ -75,8 +75,8 @@ id mouseMonitor = NULL;
     
     BOOL logMouse = [[NSUserDefaults standardUserDefaults] boolForKey:@"LogMouse"];
     BOOL logKeys = [[NSUserDefaults standardUserDefaults] boolForKey:@"LogKeys"];
-    [[self logMouseMenu] setState:logMouse ? NSOnState : NSOffState];
-    [[self logKeysMenu] setState:logKeys ? NSOnState : NSOffState];
+    [[self logMouseMenu] setState:logMouse ? NSControlStateValueOn : NSControlStateValueOff];
+    [[self logKeysMenu] setState:logKeys ? NSOnState : NSControlStateValueOff];
 
     BOOL accessibilityEnabled = NO;
     if (AXAPIEnabled()) {
@@ -97,7 +97,7 @@ id mouseMonitor = NULL;
             [alert addButtonWithTitle:@"OK"];
             [alert setMessageText:@"TrackMe isn't logging anything."];
             [alert setInformativeText:@"Both mouse and key logging is turned off. Please enable one or both of them."];
-            [alert setAlertStyle:NSWarningAlertStyle];
+            [alert setAlertStyle:NSAlertStyleWarning];
             [alert runModal];
 
         }
@@ -106,7 +106,7 @@ id mouseMonitor = NULL;
         [alert addButtonWithTitle:@"Quit"];
         [alert setMessageText:@"Enable access for assistive devices."];
         [alert setInformativeText:@"TrackMe needs access for assistive devices. Please enable it in the System Preferences."];
-        [alert setAlertStyle:NSCriticalAlertStyle];
+        [alert setAlertStyle:NSAlertStyleCritical];
         [alert runModal];
         [NSApp terminate:self];
     }
