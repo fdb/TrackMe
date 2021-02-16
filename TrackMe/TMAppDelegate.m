@@ -76,15 +76,11 @@ id mouseMonitor = NULL;
     BOOL logMouse = [[NSUserDefaults standardUserDefaults] boolForKey:@"LogMouse"];
     BOOL logKeys = [[NSUserDefaults standardUserDefaults] boolForKey:@"LogKeys"];
     [[self logMouseMenu] setState:logMouse ? NSControlStateValueOn : NSControlStateValueOff];
-    [[self logKeysMenu] setState:logKeys ? NSOnState : NSControlStateValueOff];
+    [[self logKeysMenu] setState:logKeys ? NSControlStateValueOn : NSControlStateValueOff];
 
-    BOOL accessibilityEnabled = NO;
-    if (AXAPIEnabled()) {
-        accessibilityEnabled = YES;
-    } else if (AXIsProcessTrusted()) {
-        accessibilityEnabled = YES;
-    }
-    
+    NSDictionary *options = @{(__bridge id)kAXTrustedCheckOptionPrompt: (id)kCFBooleanFalse};
+    BOOL accessibilityEnabled = AXIsProcessTrustedWithOptions((__bridge CFDictionaryRef)options);
+
     if (accessibilityEnabled) {
         if (logMouse) {
             [self startLoggingMouse];
@@ -103,11 +99,15 @@ id mouseMonitor = NULL;
         }
     } else {
         NSAlert *alert = [[NSAlert alloc] init];
-        [alert addButtonWithTitle:@"Quit"];
+        [alert addButtonWithTitle:@"Open accessibility settings"];
         [alert setMessageText:@"Enable access for assistive devices."];
-        [alert setInformativeText:@"TrackMe needs access for assistive devices. Please enable it in the System Preferences."];
+        [alert setInformativeText:@"TrackMe needs access for assistive devices. Unlock the panel and enable TrackMe. Afterwards, start the app again."];
         [alert setAlertStyle:NSAlertStyleCritical];
         [alert runModal];
+
+        NSString *urlString = @"x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility";
+        [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:urlString]];
+
         [NSApp terminate:self];
     }
 }
