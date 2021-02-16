@@ -1,11 +1,3 @@
-//
-//  TMAppDelegate.m
-//  TrackMe
-//
-//  Created by Frederik on 05/12/13.
-//  Copyright (c) 2013 EMRG. All rights reserved.
-//
-
 #import "TMAppDelegate.h"
 #include <sqlite3.h>
 
@@ -26,14 +18,14 @@ id mouseMonitor = NULL;
     appSupportPath = [appSupportPath stringByAppendingPathComponent:@"TrackMe"];
     NSString *dbPath = [appSupportPath stringByAppendingPathComponent:@"trackme.db"];
     [[NSFileManager defaultManager] createDirectoryAtPath:appSupportPath withIntermediateDirectories:YES attributes:nil error:nil];
-    
+
     err = sqlite3_open([dbPath UTF8String], &db);
     if (err) {
         NSLog(@"Can't open database: %s", sqlite3_errmsg(db));
         sqlite3_close(db);
         exit(-1);
     }
-    
+
     err = sqlite3_exec(db,
                        "CREATE TABLE IF NOT EXISTS mouse ("
                        "id INTEGER PRIMARY KEY AUTOINCREMENT,"
@@ -45,14 +37,14 @@ id mouseMonitor = NULL;
         sqlite3_close(db);
         exit(-1);
     }
-    
+
     err = sqlite3_prepare_v2(db, "INSERT INTO mouse (X, Y) VALUES (?, ?)", -1, &mouse_positions_stmt, NULL);
     if (err) {
         NSLog(@"Can't prepare mouse insert statement: %s", sqlite3_errmsg(db));
         sqlite3_close(db);
         exit(-1);
     }
-    
+
     err = sqlite3_exec(db,
                        "CREATE TABLE IF NOT EXISTS keys ("
                        "id INTEGER PRIMARY KEY AUTOINCREMENT,"
@@ -63,16 +55,16 @@ id mouseMonitor = NULL;
         sqlite3_close(db);
         exit(-1);
     }
-    
+
     err = sqlite3_prepare_v2(db, "INSERT INTO keys (key) VALUES (?)", -1, &keystrokes_stmt, NULL);
     if (err) {
         NSLog(@"Can't prepare keys insert statement: %s", sqlite3_errmsg(db));
         sqlite3_close(db);
         exit(-1);
     }
-    
+
     [self addAppAsLoginItem];
-    
+
     BOOL logMouse = [[NSUserDefaults standardUserDefaults] boolForKey:@"LogMouse"];
     BOOL logKeys = [[NSUserDefaults standardUserDefaults] boolForKey:@"LogKeys"];
     [[self logMouseMenu] setState:logMouse ? NSControlStateValueOn : NSControlStateValueOff];
@@ -179,7 +171,7 @@ id mouseMonitor = NULL;
 - (void)logMouseMoved:(NSEvent *)event
 {
     NSPoint loc =[NSEvent mouseLocation];
-    
+
     sqlite3_reset(mouse_positions_stmt);
     sqlite3_clear_bindings(mouse_positions_stmt);
     sqlite3_bind_int(mouse_positions_stmt, 1, (int) loc.x);
@@ -241,7 +233,7 @@ id mouseMonitor = NULL;
 - (IBAction)exportData:(id)sender
 {
     NSArray* fileTypes = [[NSArray alloc] initWithObjects:@"csv", nil];
-    
+
     NSSavePanel *panel = [NSSavePanel savePanel];
     [panel setTitle:@"Export data to CSV"];
     [panel setAllowedFileTypes:fileTypes];
@@ -265,7 +257,7 @@ id mouseMonitor = NULL;
     if (err) {
         NSLog(@"Can't export mouse data: %s", sqlite3_errmsg(db));
     }
-    
+
     int result = sqlite3_step(stmt);
     while (result == SQLITE_ROW) {
         int id = sqlite3_column_int(stmt, 0);
@@ -281,7 +273,7 @@ id mouseMonitor = NULL;
         result = sqlite3_step(stmt);
     }
     NSError *error;
-    
+
     BOOL ok = [csv writeToURL:path atomically:YES
                      encoding:NSUTF8StringEncoding error:&error];
     if (!ok) {
@@ -299,7 +291,7 @@ id mouseMonitor = NULL;
     if (err) {
         NSLog(@"Can't export key data: %s", sqlite3_errmsg(db));
     }
-    
+
     int result = sqlite3_step(stmt);
     while (result == SQLITE_ROW) {
         int id = sqlite3_column_int(stmt, 0);
@@ -314,7 +306,7 @@ id mouseMonitor = NULL;
         result = sqlite3_step(stmt);
     }
     NSError *error;
-    
+
     BOOL ok = [csv writeToURL:path atomically:YES
                      encoding:NSUTF8StringEncoding error:&error];
     if (!ok) {
