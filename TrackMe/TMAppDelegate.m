@@ -146,12 +146,12 @@ id mouseMonitor = NULL;
 {
     NSInteger state = [(NSMenuItem *)sender state];
     BOOL isLogging;
-    if (state == NSOnState) {
-        [sender setState:NSOffState];
+    if (state == NSControlStateValueOn) {
+        [sender setState:NSControlStateValueOff];
         [self stopLoggingMouse];
         isLogging = false;
     } else {
-        [sender setState:NSOnState];
+        [sender setState:NSControlStateValueOn];
         [self startLoggingMouse];
         isLogging = true;
     }
@@ -162,7 +162,7 @@ id mouseMonitor = NULL;
 {
     [self stopLoggingMouse];
     NSLog(@"Start logging mouse");
-    mouseMonitor = [NSEvent addGlobalMonitorForEventsMatchingMask:NSMouseMovedMask handler:^(NSEvent *event) {
+    mouseMonitor = [NSEvent addGlobalMonitorForEventsMatchingMask:NSEventMaskMouseMoved handler:^(NSEvent *event) {
         [self logMouseMoved:event];
     }];
 }
@@ -194,12 +194,12 @@ id mouseMonitor = NULL;
 {
     NSInteger state = [(NSMenuItem *)sender state];
     BOOL isLogging;
-    if (state == NSOnState) {
-        [sender setState:NSOffState];
+    if (state == NSControlStateValueOn) {
+        [sender setState:NSControlStateValueOff];
         [self stopLoggingKeys];
         isLogging = false;
     } else {
-        [sender setState:NSOnState];
+        [sender setState:NSControlStateValueOn];
         [self startLoggingKeys];
         isLogging = true;
     }
@@ -210,7 +210,7 @@ id mouseMonitor = NULL;
 {
     [self stopLoggingKeys];
     NSLog(@"Start logging keys");
-    keyMonitor = [NSEvent addGlobalMonitorForEventsMatchingMask:NSKeyDownMask handler:^(NSEvent *event) {
+    keyMonitor = [NSEvent addGlobalMonitorForEventsMatchingMask:NSEventMaskKeyDown handler:^(NSEvent *event) {
         [self logKeyDown:event];
     }];
 }
@@ -246,7 +246,7 @@ id mouseMonitor = NULL;
     [panel setTitle:@"Export data to CSV"];
     [panel setAllowedFileTypes:fileTypes];
     NSInteger clicked = [panel runModal];
-    if (clicked == NSFileHandlingPanelOKButton) {
+    if (clicked == NSModalResponseOK) {
         NSInteger tag = [sender tag];
         if (tag == 1) {
             [self doExportMouseData:[panel URL]];
