@@ -418,6 +418,7 @@
 				GCC_PREFIX_HEADER = "TrackMe/TrackMe-Prefix.pch";
 				INFOPLIST_FILE = "TrackMe/TrackMe-Info.plist";
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
+				MARKETING_VERSION = 1.3;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = macosx;
@@ -441,6 +442,7 @@
 				GCC_PREFIX_HEADER = "TrackMe/TrackMe-Prefix.pch";
 				INFOPLIST_FILE = "TrackMe/TrackMe-Info.plist";
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
+				MARKETING_VERSION = 1.3;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = macosx;
