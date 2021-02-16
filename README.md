@@ -1,15 +1,23 @@
-TrackMe
-=======
-TrackMe is a Mac app that tracks your mouse position throughout the day.
+# TrackMe
 
-Once started, it automatically registers the mouse position every 2 seconds.
+TrackMe is a macOS app that tracks your mouse positions and keystrokes throughout the day. You can then export it to CSV and visualise the data.
 
-Features
---------
+![TrackMe screenshot](https://raw.githubusercontent.com/fdb/TrackMe/master/.github/screenshot.png)
+
+TrackMe is compatible with macOS 10.10 and tested on Big Sur (11.2).
+
+## 🚀 Features
+
 * Lightweight footprint.
 * Starts automatically on login.
 * Ability to export the data as CSV.
 
-Download
---------
+## 💾 Download
+
 [Download the latest release](https://github.com/fdb/TrackMe/releases/latest)
+
+## 🤖 Installation
+
+To work, TrackMe needs to be enabled in the "accessibility settings" of your Mac. On start, it will open the preferences automatically. Unlock the panel, check TrackMe, then start the app again.
+
+![Enable TrackMe in the accessibility panel](https://raw.githubusercontent.com/fdb/TrackMe/master/.github/accessiblity-panel.png)
