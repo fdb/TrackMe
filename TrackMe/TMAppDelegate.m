@@ -116,9 +116,9 @@ id mouseMonitor = NULL;
 {
     statusItem = [[NSStatusBar systemStatusBar] statusItemWithLength:NSSquareStatusItemLength];
     [statusItem setMenu:_statusMenu];
-    
-    [statusItem setImage:[NSImage imageNamed:@"menu_icon"]];
-    [statusItem setHighlightMode:YES];
+    NSImage* icon =[NSImage imageNamed:@"menu_icon"];
+    icon.template = YES;
+    statusItem.button.image = icon;
 }
 
 - (void)applicationWillTerminate:(NSNotification *)notification
