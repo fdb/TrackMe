@@ -16,7 +16,7 @@ TrackMe is compatible with macOS 10.10 and tested on Big Sur (11.2).
 
 ## 💾 Download
 
-[Download version 1.3.1](https://github.com/fdb/TrackMe/releases/download/v1.3.1/TrackMe-1.3.1.zip)
+[Download TrackMe (version 1.3.1)](https://github.com/fdb/TrackMe/releases/download/v1.3.1/TrackMe-1.3.1.zip)
 
 ## 🤖 Installation
 
